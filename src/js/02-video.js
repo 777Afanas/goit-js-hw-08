@@ -15,7 +15,7 @@
 
     const iframe = document.querySelector('iframe');
     const player = new Player(iframe);
-    LOCALSTORAGE_KEY = 'videoplayer-current-time';
+    const LOCALSTORAGE_KEY = 'videoplayer-current-time';
 
 // Сохраняй время воспроизведения в локальное хранилище. 
 // Пусть ключом для хранилища будет строка "videoplayer-current-time". 
