@@ -17,12 +17,12 @@ function onFeedbackInput(e) {
 };
 
 // При загрузке страницы проверяй состояние хранилища, и если там есть сохраненные данные,
-// заполняй ими поля формы.В противном случае поля должны быть пустыми. 
+// заполняй ими поля формы.В противном случае поля должны быть пустыми.  
 function onFeedbackPopulate() {    
 const savedMess = JSON.parse(localStorage.getItem(STORAGE_KEY));     
     if (savedMess) {
-        form.email.value = savedMess.email;
-        form.message.value = savedMess.message;               
+        form.email.value = savedMess.email || [];
+        form.message.value = savedMess.message || [];               
     }
 } 
 // При сабмите формы очищай хранилище и поля формы,
