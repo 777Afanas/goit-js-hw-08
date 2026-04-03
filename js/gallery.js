@@ -1,3 +1,9 @@
+// 1. Розмітка галереї
+// Додаємо тег контейнера галереї — невпорядкований список із класом gallery.
+
+// 2. Масив зображень
+// Додаємо масив об’єктів, кожен об’єкт - один елемент галереї.
+
 const images = [
   {
     preview:
@@ -63,3 +69,46 @@ const images = [
     description: 'Lighthouse Coast Sea',
   },
 ];
+
+// 3. Розмітка елементів галереї
+//  Наповнимо галерею розміткою - використовуємо масив об’єктів images і
+// HTML шаблон елемента галереї для створення розмітки елементів та
+// додаємо розмітку всередину ul.gallery.
+
+const refs = {
+  imagesList: document.querySelector('.js-gallery'),
+};
+
+const createImageCardTemplate = ({ preview, original, description }) => {
+  return `
+  <li class="gallery-item">
+  <a class="gallery-link" href="${original}">
+    <img
+      class="gallery-image"
+      src="${preview}"
+      data-source="${original}"
+      alt="${description}"
+    />
+  </a>
+</li>`;
+};
+
+const imageCardsTemplate = images
+  .map(imageInfo => createImageCardTemplate(imageInfo))
+  .join('');
+
+refs.imagesList.innerHTML = imageCardsTemplate;
+
+const onImageCardClick = e => {
+  e.preventDefault();
+  if (e.target === e.currentTarget) {
+    return;
+  }
+
+  const imageCardEl = e.target.closest('.gallery-image');
+
+  const imageSourse = imageCardEl.dataset.source;
+  console.log(imageSourse);
+};
+
+refs.imagesList.addEventListener('click', onImageCardClick);
