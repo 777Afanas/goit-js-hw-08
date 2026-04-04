@@ -1,8 +1,11 @@
 // 1. Розмітка галереї
-// Додаємо тег контейнера галереї — невпорядкований список із класом gallery.
+// Додаємо тег контейнера галереї — невпорядкований список
+// із класом gallery (файл index.html).
+//  <body>
+//  <ul class="gallery js-gallery"></ul>
+//  </body>;
 
-// 2. Масив зображень
-// Додаємо масив об’єктів, кожен об’єкт - один елемент галереї.
+// 2. Масив зображень - об’єктів, кожен об’єкт - один елемент галереї.
 
 const images = [
   {
@@ -71,15 +74,15 @@ const images = [
 ];
 
 // 3. Розмітка елементів галереї
-//  Наповнимо галерею розміткою - використовуємо масив об’єктів images і
-// HTML шаблон елемента галереї для створення розмітки елементів та
-// додаємо розмітку всередину ul.gallery.
+// З використанням HTML шаблона елемента галереї створюємо (createImageItemTemplate)
+// та додаємо розмітку усіх елементів масиву об'єктів images
+// (imagesTemplate) у середину ul.gallery.
 
 const refs = {
   imagesList: document.querySelector('.js-gallery'),
 };
 
-const createImageCardTemplate = ({ preview, original, description }) => {
+const createImageItemTemplate = ({ preview, original, description }) => {
   return `
   <li class="gallery-item">
   <a class="gallery-link" href="${original}">
@@ -93,22 +96,37 @@ const createImageCardTemplate = ({ preview, original, description }) => {
 </li>`;
 };
 
-const imageCardsTemplate = images
-  .map(imageInfo => createImageCardTemplate(imageInfo))
+const imagesTemplate = images
+  .map(imageItem => createImageItemTemplate(imageItem))
   .join('');
 
-refs.imagesList.innerHTML = imageCardsTemplate;
+refs.imagesList.innerHTML = imagesTemplate;
 
-const onImageCardClick = e => {
+const onImageItemClick = e => {
+  // 1 варіант - реагувати тільки на конкретний тип
+  // вкладеного елемента (тільки на 'img').
+  if (e.target.nodeName !== 'IMG') return;
+  // 2 варіант
+  // A. Ігноруємо клік по самому контейнеру (пусте місце між картинками)
+  // if (e.target === e.currentTarget) return;
+  // B. Додаткова перевірка: чи клікнули саме по картинці (або посиланню)
+  // if (!e.target.classList.contains('gallery-image')) return;
+
   e.preventDefault();
-  if (e.target === e.currentTarget) {
-    return;
-  }
+  const largeImage = e.target.dataset.source;
+  const descriptionImage = e.target.alt;
 
-  const imageCardEl = e.target.closest('.gallery-image');
+  const modalInstance = basicLightbox.create(`
+    <div class="modal">
+    <img
+      class="gallery-image"
+      src="${largeImage}"       
+      alt="${descriptionImage}"
+    />
+    </div>    
+    `);
 
-  const imageSourse = imageCardEl.dataset.source;
-  console.log(imageSourse);
+  modalInstance.show();
 };
 
-refs.imagesList.addEventListener('click', onImageCardClick);
+refs.imagesList.addEventListener('click', onImageItemClick);
