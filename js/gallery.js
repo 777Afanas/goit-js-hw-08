@@ -103,25 +103,28 @@ const imagesTemplate = images
 refs.imagesList.innerHTML = imagesTemplate;
 
 const onImageItemClick = e => {
-  // 1 варіант - реагувати тільки на конкретний тип
-  // вкладеного елемента (тільки на 'img').
-  if (e.target.nodeName !== 'IMG') return;
-  // 2 варіант
-  // A. Ігноруємо клік по самому контейнеру (пусте місце між картинками)
-  // if (e.target === e.currentTarget) return;
-  // B. Додаткова перевірка: чи клікнули саме по картинці (або посиланню)
-  // if (!e.target.classList.contains('gallery-image')) return;
+  // A. Ігноруємо клік по самому контейнеру
+  // (пусте місце між картинками)
+  if (e.target === e.currentTarget) return;
 
+  // СКАСУВАННЯ: якщо ми всередині контейнера
+  // і це було посилання,
+  // ми зупиняємо перехід ВЖЕ ЗАРАЗ, щоб сторінка
+  // не перезавантажилась.
   e.preventDefault();
-  const largeImage = e.target.dataset.source;
-  const descriptionImage = e.target.alt;
+
+  // Додаткова перевірка: чи клікнули саме по картинці
+  if (!e.target.classList.contains('gallery-image')) return;
+
+  const { source } = e.target.dataset;
+  const { alt } = e.target;
 
   const modalInstance = basicLightbox.create(`
     <div class="modal">
     <img
       class="gallery-image"
-      src="${largeImage}"       
-      alt="${descriptionImage}"
+      src="${source}"       
+      alt="${alt}"
     />
     </div>    
     `);
